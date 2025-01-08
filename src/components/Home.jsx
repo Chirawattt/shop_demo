@@ -4,21 +4,41 @@ import Header from "./Header";
 import Announcement from "./Announcement";
 import Categories from "./Categories";
 import ProductCard from "./ProductCard";
-import data from "../data.json";
-import types from "../type.json";
+import axios from "axios";
 
 export default function Home() {
-  const [getproducts, setgetproducts] = useState([]);
+  const [suggestProducts, setSuggestProducts] = useState([]);
+  const [types, setTypes] = useState([]);
+
+  const fetchTypes = async () => {
+    try {
+      const response = await axios.get(`https://backendshop.thirteenpointeight.com/type`);
+      setTypes(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const randomProduct = async () => {
+    try {
+      const response = await axios.get(`https://backendshop.thirteenpointeight.com/product`);
+      const allProduct = response.data;
+      const tempArray = [];
+      /* problem here, some products still duplicate, need to fix it later */
+      for (let i = 0; i < 6; i++) {
+        const randomIndex = Math.floor(Math.random() * allProduct.length);
+        tempArray.push(allProduct[randomIndex]);
+      }
+      setSuggestProducts(tempArray);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   useEffect(() => {
-    setgetproducts(data.slice(0, 6));
+    fetchTypes();
+    randomProduct();
   }, []);
-
-  //filter category
-  const filterCategory = (type) => {
-    const newproducts = data.filter((e) => e.type == type);
-    setgetproducts([...newproducts]);
-  };
 
   return (
     <div className="container">
@@ -35,8 +55,6 @@ export default function Home() {
               name={e.name}
               typeid={e.id}
               key={key}
-              goto={e.goto}
-              filterCategory={filterCategory}
             />
           ))}
         </div>
@@ -45,13 +63,13 @@ export default function Home() {
       <div style={{ margin: "20px 0" }}>
         <p className="headerText">สินค้าแนะนำสำหรับคุณ</p>
         <div className="productContainer">
-          {getproducts.map((e, key) => (
+          {suggestProducts.map((e, key) => (
             <ProductCard
-              key={key}
-              img={e.img}
+              img={e.strImg}
               name={e.name}
               price={e.price}
-              p_id={e.id}
+              pId={e.id}
+              key={key}
             />
           ))}
         </div>

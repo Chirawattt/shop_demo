@@ -1,19 +1,51 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import Categories from "./Categories";
 import ProductCard from "./ProductCard";
-import data from "../data.json";
-import types from "../type.json";
 import "../css/allproduct.css";
+import axios from "axios";
 
 export default function Allproducts() {
-  const [allproduct, setallproduct] = useState([...data]);
+  const [products, setProducts] = useState([]);
+  const [types, setTypes] = useState([]);
+
+  const fetchProducts = async (typeId) => {
+    if (typeId) {
+      try {
+        const response = await axios.get(`https://backendshop.thirteenpointeight.com/product/type/${typeId}`)
+        setProducts(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }else {
+      try {
+        const response = await axios.get(`https://backendshop.thirteenpointeight.com/product`);
+        setProducts(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
+  
+  const fetchTypes = async () => {
+    try {
+      const response = await axios.get(`https://backendshop.thirteenpointeight.com/type`);
+      setTypes(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    fetchTypes();
+    fetchProducts();
+  }, []);
 
   //filter category
-  const filterCategory = (type) => {
-    const newproducts = data.filter((e) => e.type == type);
-    setallproduct([...newproducts]);
-  };
+  // const filterCategory = (type) => {
+  //   const newproducts = data.filter((e) => e.type == type);
+  //   setallproduct([...newproducts]);
+  // };
 
   return (
     <div className="apContainer">
@@ -23,13 +55,12 @@ export default function Allproducts() {
         <p className="headerText">หมวดหมู่ทั้งหมด</p>
         {/* categories */}
         <div className="categoryContainer">
-          {types.map((e, key) => (
+          {types.map((type, key) => (
             <Categories
-              name={e.name}
-              typeid={e.id}
+              name={type.name}
+              typeId={type.id}
               key={key}
-              goto={e.goto}
-              filterCategory={filterCategory}
+              fetchProducts={fetchProducts}
             />
           ))}
         </div>
@@ -38,13 +69,13 @@ export default function Allproducts() {
       <div style={{ margin: "20px 0" }}>
         <p className="headerText">สินค้าทั้งหมด</p>
         <div className="productContainer">
-          {allproduct.map((e, key) => (
+          {products.map((item, key) => (
             <ProductCard
               key={key}
-              img={e.img}
-              name={e.name}
-              price={e.price}
-              p_id={e.id}
+              img={item.strImg}
+              name={item.name}
+              price={item.price}
+              pId={item.id}
             />
           ))}
         </div>

@@ -1,12 +1,9 @@
 import "../css/Categories.css";
 
-export default function Categories({ name, filterCategory, typeid }) {
-  const clickType = (type) => {
-    filterCategory(type);
-  };
+export default function Categories({ name, typeId, fetchProducts }) {
 
   return (
-    <button onClick={() => clickType(typeid)} className="categoryList">
+    <button onClick={() => fetchProducts(typeId)} className="categoryList">
       <p>{name}</p>
     </button>
   );

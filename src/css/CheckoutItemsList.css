@@ -1,0 +1,19 @@
+.itemList {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    margin-bottom: 5px;
+}
+
+.itemList img {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto;
+}
+
+.itemList p {
+    text-align: center;
+    margin: auto 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}

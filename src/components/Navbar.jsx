@@ -5,15 +5,23 @@ const Navbar = () => {
     <div className="head">
       <div>
         <div className="boxleft">
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/1867/1867540.png"
-            alt=""
-          />
-          <a href="/">หน้าแรก</a>
-          <a href="/allproducts">สินค้าทั้งหมด</a>
+          <div className="brand-logo">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/1867/1867540.png"
+              alt=""
+            />
+          </div>
+          <ul className="menu">
+            <li className="menu-item">
+              <i class="fa-solid fa-house" /><a href="/" >หน้าแรก</a>
+            </li>
+            <li className="menu-item">
+              <i class="fa-solid fa-shop"></i><a href="/allproducts" >สินค้าทั้งหมด</a>
+            </li>
+          </ul>
         </div>
         <div className="boxright">
-          <a href="/cart">ตะกร้าสินค้า</a>
+          <a href="/cart"><i class="fa-solid fa-cart-shopping" /></a>
         </div>
       </div>
     </div>
