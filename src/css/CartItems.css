@@ -1,6 +1,6 @@
 .cartItems {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
     text-align: center;
     padding: 8px;
     border-top: 1px solid rgb(230, 230, 230);

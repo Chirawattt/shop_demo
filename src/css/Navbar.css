@@ -50,11 +50,11 @@
 .menu-item:hover {
   background: #77d7fe;
   cursor: pointer;
-  color: #fff;
   transition: all 0.2s ease-in-out;
 }
 
 .boxright {
+  position: relative;
   font-size: 18px;
   padding: 5px 10px;
   border-radius: 5px;
@@ -64,4 +64,20 @@
   cursor: pointer;
   color: #fff;
   transition: all 0.2s ease-in-out;
+}
+
+.cartCount {
+  position: absolute;
+  top: 0;
+  right: -3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: red;
+  color: white;
+  font-size: 13px;
+  padding: 0 2px;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 50%;
 }

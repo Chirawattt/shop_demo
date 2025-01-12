@@ -1,4 +1,5 @@
 import "../css/CheckoutItemsList.css";
+import { formatPrice } from "../utils/formatPrice";
 
 export default function CheckoutItemsList({pic, name, price, amount}) {
     return(
@@ -6,7 +7,7 @@ export default function CheckoutItemsList({pic, name, price, amount}) {
             <img src={pic} alt="" />
             <p>{name}</p>
             <p>{amount}</p>
-            <p>{price}</p>
+            <p>{formatPrice(price)}</p>
         </div>
     )
 }

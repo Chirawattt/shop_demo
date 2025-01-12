@@ -1,60 +1,95 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Navbar from "./Navbar";
 import Header from "./Header";
 import Announcement from "./Announcement";
-import Categories from "./Categories";
+import Category from "./Category";
 import ProductCard from "./ProductCard";
 import axios from "axios";
 
 export default function Home() {
   const [suggestProducts, setSuggestProducts] = useState([]);
   const [types, setTypes] = useState([]);
+  const [cartCount, setCartCount] = useState(0);
 
-  const fetchTypes = async () => {
+  const fetchTypes = useCallback(async () => {
     try {
       const response = await axios.get(`https://backendshop.thirteenpointeight.com/type`);
       setTypes(response.data);
     } catch (error) {
-      console.log(error);
+      console.log("Error fetching product types: ", error);
     }
-  }
+  }, []);
 
-  const randomProduct = async () => {
+  const fetchSuggestedProducts = useCallback(async () => {
     try {
       const response = await axios.get(`https://backendshop.thirteenpointeight.com/product`);
       const allProduct = response.data;
-      const tempArray = [];
-      /* problem here, some products still duplicate, need to fix it later */
-      for (let i = 0; i < 6; i++) {
-        const randomIndex = Math.floor(Math.random() * allProduct.length);
-        tempArray.push(allProduct[randomIndex]);
+      const randomProducts = [];
+      if (allProduct.length > 0) {
+        while (randomProducts.length < 6) {
+          const randomIndex = Math.floor(Math.random() * allProduct.length);
+          if (!randomProducts.includes(allProduct[randomIndex])) {
+            randomProducts.push(allProduct[randomIndex]);
+          }
+        }
       }
-      setSuggestProducts(tempArray);
+      setSuggestProducts(randomProducts);
     } catch (error) {
-      console.log(error);
+      console.log("Error fetching suggested products: ", error);
     }
+  }, []);
+
+  
+  // update cart count from local storage
+  const updateCartCount = useCallback(() => {
+    const cartData = JSON.parse(localStorage.getItem("cartData")) || [];
+    setCartCount(cartData.length);
+  }, []);
+
+  const addToCart = (id) => {
+    const cartData = JSON.parse(localStorage.getItem("cartData")) || [];
+    const itemExists = cartData.some((item) => item.id === id);
+    let updateCart = [];
+
+    if (!itemExists) {
+      updateCart = [...cartData, { id, amount: 1 }];
+    }else {
+      updateCart = cartData.map((item) => {
+        if (item.id === id) {
+          item.amount += 1;
+        }
+        return item;
+      });
+    }
+    localStorage.setItem("cartData", JSON.stringify(updateCart));
+    updateCartCount();
   }
 
   useEffect(() => {
     fetchTypes();
-    randomProduct();
-  }, []);
+    fetchSuggestedProducts();
+    updateCartCount();
+  }, [fetchTypes, fetchSuggestedProducts, updateCartCount]);
+
+
 
   return (
     <div className="container">
-      <Navbar />
+      <Navbar cartCount={cartCount} />
       <Header />
-      <Announcement msg="คำว่าฮักเกิดขึ้นที่ใด เกิดกับไผมันบ่สำคัญ มันจะอยู่ตรงนั้น บ่หายตามกาลเวลา ว่าสิผ่านมาดนปานใด๋ ในหัวใจบ่เคยร้างลา ยังจดจำทุกถ้อยวาจา ที่เฮาเว้าต่อกัน เมื่อสวรรค์แยกกายเฮาสอง จากคู่ครองเป็นคนอื่นไกล เหลือแต่คำสัญญาใช่ไหมที่ยังคงอยู่ แม้นว่าเจ้าสิเกิดเป็นหยัง บ่เคยคิดซัง ย้อนฮักคนฮู้ สิเคียงข้างให้ได้ฮู้ หัวใจยังคงเดิม" />
+      <Announcement msg="โปรโมชัน ลดแลกแจกแถมตอนนี้วันที่ 1 มกราคม 2568 จนถึง 31 ธันวาคม รีบช็อปด่วน!! สินค้ามีหมด!!" />
       {/* category */}
       <div style={{ margin: "40px 0" }}>
         <p className="headerText">หมวดหมู่ทั้งหมด</p>
         {/* categories */}
         <div className="categoryContainer">
-          {types.map((e, key) => (
-            <Categories
-              name={e.name}
-              typeid={e.id}
-              key={key}
+          {types.map((type) => (
+            <Category
+              key={type.id}
+              name={type.name}
+              typeId={type.id}
+              setSelectedButton={""}
+              selectedButton={""}
             />
           ))}
         </div>
@@ -63,13 +98,14 @@ export default function Home() {
       <div style={{ margin: "20px 0" }}>
         <p className="headerText">สินค้าแนะนำสำหรับคุณ</p>
         <div className="productContainer">
-          {suggestProducts.map((e, key) => (
+          {suggestProducts.map((product) => (
             <ProductCard
-              img={e.strImg}
-              name={e.name}
-              price={e.price}
-              pId={e.id}
-              key={key}
+              key={product.id}
+              img={product.strImg}
+              name={product.name}
+              price={product.price}
+              pId={product.id}
+              addToCart={addToCart}
             />
           ))}
         </div>

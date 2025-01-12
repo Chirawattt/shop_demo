@@ -1,6 +1,6 @@
 import "../css/Navbar.css";
 
-const Navbar = () => {
+const Navbar = ({cartCount}) => {
   return (
     <div className="head">
       <div>
@@ -12,17 +12,18 @@ const Navbar = () => {
             />
           </div>
           <ul className="menu">
-            <li className="menu-item">
-              <i class="fa-solid fa-house" /><a href="/" >หน้าแรก</a>
-            </li>
-            <li className="menu-item">
-              <i class="fa-solid fa-shop"></i><a href="/allproducts" >สินค้าทั้งหมด</a>
-            </li>
+            <a href="/" >
+              <li className="menu-item"><i className="fa-solid fa-house" />หน้าแรก</li>
+            </a>
+            <a href="/allproducts" >
+              <li className="menu-item"> <i className="fa-solid fa-shop"></i>สินค้าทั้งหมด </li>
+            </a>
           </ul>
         </div>
-        <div className="boxright">
-          <a href="/cart"><i class="fa-solid fa-cart-shopping" /></a>
-        </div>
+        <a href="/cart" className="boxright">
+          {cartCount > 0 ? <p className="cartCount">{cartCount}</p>:""}
+          <i className="fa-solid fa-cart-shopping" />
+        </a>
       </div>
     </div>
   );

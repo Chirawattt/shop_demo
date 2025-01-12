@@ -29,20 +29,23 @@
   border: 1px solid rgb(255, 232, 232);
 }
 
-.productCard > a {
+.productCard > Button {
+  cursor: pointer;
+  border: none;
   position: absolute;
   bottom: 4%;
   text-align: center;
   color: white;
   font-weight: 500;
+  font-size: 14px;
   width: 180px;
   background-color: #0db1f2;
-  padding: 4px 0;
+  padding: 7px 0;
   border-radius: 6px;
   transition: all 0.2s ease-in-out;
 }
 
-.productCard > a:hover {
+.productCard > Button:hover {
   background-color: #3cc8ff;
 }
 
